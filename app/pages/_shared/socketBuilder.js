@@ -2,7 +2,7 @@ import { constants } from './constants.js';
 
 export default class SocketBuilder {
     constructor({ socketUrl, namespace }) {
-        this.socketUrl = socketUrl;
+        this.socketUrl = `${socketUrl}/${namespace}`;
         this.onUserConnected = () => undefined;
         this.onUserDisconnected = () => undefined;
     }
