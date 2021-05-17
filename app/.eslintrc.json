@@ -4,12 +4,27 @@
         "es2021": true
     },
     "extends": [
-        "standard"
+        "standard",
+        "plugin:prettier/recommended",
+        "prettier/standard"
     ],
     "parserOptions": {
         "ecmaVersion": 12,
         "sourceType": "module"
     },
+    "plugins": [
+        "prettier"
+    ],
     "rules": {
+        "prettier/prettier":[
+            "error",
+            {
+                "singleQuote": true,
+                "semi": true,
+                "trailingComma": "all",
+                "arrowParens": "avoid"
+            }
+        ],
+        "jsx-a11y/label-has-for": 0
     }
 }
