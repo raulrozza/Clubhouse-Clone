@@ -3,6 +3,13 @@ export default class RoomsController {
 
     onNewConnection(socket) {
         const { id } = socket;
+        console.log(
+            `${new Date().toLocaleTimeString()}: New connection by ${id}`,
+        );
+    }
+
+    joinRoom(socket, data) {
+        console.log('Data received', data);
     }
 
     getEvents() {
