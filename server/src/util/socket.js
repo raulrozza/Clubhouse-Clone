@@ -1,10 +1,34 @@
 import http from 'http';
 import { Server } from 'socket.io';
+import { constants } from './constants.js';
 
 export default class SocketServer {
     constructor({ port }) {
         this.port = port;
+        this.namespaces = {};
         this._io = undefined;
+    }
+
+    attachEvents({ routeConfig }) {
+        for (const routes of routeConfig) {
+            for (const [namespace, { events, eventEmitter }] of Object.entries(
+                routes,
+            )) {
+                const route = (this.namespaces[namespace] = this._io.of(
+                    `/${namespace}`,
+                ));
+
+                route.on('connection', socket => {
+                    for (const [eventName, eventFunction] of events) {
+                        socket.on(eventName, (...args) =>
+                            eventFunction(socket, ...args),
+                        );
+                    }
+
+                    eventEmitter.emit(constants.events.USER_CONNECTED, socket);
+                });
+            }
+        }
     }
 
     async start() {
@@ -21,12 +45,6 @@ export default class SocketServer {
                 origin: '*',
                 credentials: false,
             },
-        });
-
-        const room = this._io.of('/room');
-        room.on('connection', socket => {
-            socket.emit('userConnection', 'socket id se conectou' + socket.id);
-            socket.on('joinRoom', data => console.log('Dados recebidos', data));
         });
 
         return new Promise((resolve, reject) => {
