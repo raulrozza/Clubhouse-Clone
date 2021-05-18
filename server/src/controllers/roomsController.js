@@ -1,6 +1,7 @@
 import Attendee from '../entities/attendee.js';
 import Room from '../entities/room.js';
 import { constants } from '../util/constants.js';
+import Logger from '../util/logger.js';
 
 export default class RoomsController {
     constructor() {
@@ -10,10 +11,42 @@ export default class RoomsController {
 
     onNewConnection(socket) {
         const { id } = socket;
-        console.log(
-            `${new Date().toLocaleTimeString()}: New connection by ${id}`,
-        );
+        Logger.log(`New connection by ${id}`);
         this._updateGlobalUserData({ userId: id });
+    }
+
+    disconnect(socket) {
+        Logger.log(`Disconnection by ${socket.id}`);
+    }
+
+    _logoutUser(socket) {
+        const userId = socket.id;
+        const user = this._users.get(userId);
+        const roomId = user.roomId;
+
+        // Removing user from active users
+        this._users.delete(userId);
+
+        // In case its a dirt user from a room that no longer exists
+        if (!this.rooms.has(roomId)) return;
+
+        // Removing user from room
+        const room = this._removeUserFromRoom({ roomId, userId });
+
+        if (!room.users.size) {
+            this.rooms.delete(roomId);
+            return;
+        }
+
+        this.rooms.set(roomId, room);
+    }
+
+    _removeUserFromRoom({ roomId, userId }) {
+        const room = this.rooms.get(roomId);
+        const toBeRemoved = [...room.users].find(user => user.id === userId);
+        room.users.delete(toBeRemoved);
+
+        return room;
     }
 
     joinRoom(socket, { user, room }) {
