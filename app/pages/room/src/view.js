@@ -31,10 +31,25 @@ export default class View {
         return existingItem;
     }
 
-    static addAttendeeOnGrid(item) {
+    static addAttendeeOnGrid(item, removeFirst = false) {
         const attendee = new Attendee(item);
+        const id = attendee.id;
         const htmlComponent = AttendeeComponent(attendee);
         const baseElement = attendee.isSpeaker ? gridSpeakers : gridAttendees;
+
+        if (removeFirst) {
+            View.removeItemFromGrid(id);
+            return (baseElement.innerHTML += htmlComponent);
+        }
+
+        const existingItem = View._getExistingItemOnGrid({
+            id,
+            baseElement,
+        });
+
+        if (existingItem) {
+            return (existingItem.innerHTML = htmlComponent);
+        }
 
         baseElement.innerHTML += htmlComponent;
     }

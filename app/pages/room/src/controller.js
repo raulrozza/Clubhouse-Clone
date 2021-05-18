@@ -34,8 +34,13 @@ export default class RoomController {
     }
 
     onUserProfileUpgraded() {
-        return user =>
+        return user => {
             Logger.log(`Promoting to owner: ${user.username} {ID ${user.id}}`);
+
+            if (!user.isSpeaker) return;
+
+            this.view.addAttendeeOnGrid(user, true);
+        };
     }
 
     onRoomUpdated() {
