@@ -11,12 +11,12 @@ export default class RoomsController {
 
     onNewConnection(socket) {
         const { id } = socket;
-        Logger.log(`New connection by ${id}`);
+        Logger.log(`[Rooms] New connection by ${id}`);
         this._updateGlobalUserData({ userId: id });
     }
 
     disconnect(socket) {
-        Logger.log(`Disconnection by ${socket.id}`);
+        Logger.log(`[Rooms] Disconnection by ${socket.id}`);
         this._logoutUser(socket);
     }
 
