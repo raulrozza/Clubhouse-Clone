@@ -38,7 +38,16 @@ export default class RoomsController {
             return;
         }
 
+        const disconnectedUserWasAnOwner = userId === room.owner.id;
+        const onlyOneUserLeft = room.users.size() === 1;
+
+        if (onlyOneUserLeft || disconnectedUserWasAnOwner) {
+            room.owner = this._getNewRoomOwner({ room, socket });
+        }
+
         this.rooms.set(roomId, room);
+
+        socket.to(roomId).emit(constants.events.USER_DISCONNECTED, user);
     }
 
     _removeUserFromRoom({ roomId, userId }) {
@@ -47,6 +56,24 @@ export default class RoomsController {
         room.users.delete(toBeRemoved);
 
         return room;
+    }
+
+    _getNewRoomOwner({ room, socket }) {
+        const users = [...room.users.values()];
+        const activeSpeakers = users.find(user => user.isSpeaker);
+        // Next speaker becomes owner. If there are no more speakers, the next attendee becomes the owner
+        const [newOwner] = activeSpeakers ? [activeSpeakers] : users;
+        newOwner.isSpeaker = true;
+
+        const outdatedUser = this._users.get(newOwner.id);
+        const updatedUser = new Attendee({
+            ...outdatedUser,
+            ...newOwner,
+        });
+
+        this._users.set(newOwner.id, updatedUser);
+
+        return newOwner;
     }
 
     joinRoom(socket, { user, room }) {
