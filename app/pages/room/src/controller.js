@@ -32,7 +32,7 @@ export default class RoomController {
     }
 
     onRoomUpdated() {
-        return room => console.log('room list', room);
+        return attendees => this.view.updateAttendeesOnGrid(attendees);
     }
 
     onUserDisconnected() {

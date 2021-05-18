@@ -16,6 +16,10 @@ export default class View {
         pTopic.innerHTML = topic;
     }
 
+    static updateAttendeesOnGrid(users) {
+        users.forEach(item => View.addAttendeeOnGrid(item));
+    }
+
     static addAttendeeOnGrid(item) {
         const attendee = new Attendee(item);
         const htmlComponent = AttendeeComponent(attendee);
