@@ -29,7 +29,13 @@ export default class RoomController {
             .setOnUserConnected(this.onUserConnected())
             .setOnUserDisconnected(this.onUserDisconnected())
             .setOnRoomUpdated(this.onRoomUpdated())
+            .setOnUserProfileUpgraded(this.onUserProfileUpgraded())
             .build();
+    }
+
+    onUserProfileUpgraded() {
+        return user =>
+            Logger.log(`Promoting to owner: ${user.username} {ID ${user.id}}`);
     }
 
     onRoomUpdated() {

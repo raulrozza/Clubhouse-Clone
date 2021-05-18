@@ -74,7 +74,17 @@ export default class RoomsController {
 
         this._users.set(newOwner.id, updatedUser);
 
+        this._notifyUserProfileUpgrade({
+            socket,
+            roomId: room.id,
+            user: newOwner,
+        });
+
         return newOwner;
+    }
+
+    _notifyUserProfileUpgrade({ socket, roomId, user }) {
+        socket.to(roomId).emit(constants.events.UPGRADE_USER_PERMISSION, user);
     }
 
     joinRoom(socket, { user, room }) {
