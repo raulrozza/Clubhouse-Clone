@@ -1,7 +1,8 @@
 export default class LobbyController {
-    constructor({ socketBuilder, user }) {
+    constructor({ socketBuilder, user, view }) {
         this.socketBuilder = socketBuilder;
         this.user = user;
+        this.view = view;
     }
 
     static async initialize(deps) {
@@ -13,10 +14,12 @@ export default class LobbyController {
     }
 
     _setupSocket() {
-        return this.socketBuilder.setOnLobbyUpdated(this.newMethod()).build();
+        return this.socketBuilder
+            .setOnLobbyUpdated(this.onLobbyUpdated())
+            .build();
     }
 
-    newMethod() {
-        return rooms => console.log(rooms);
+    onLobbyUpdated() {
+        return rooms => this.view.updateRoomList(rooms);
     }
 }
