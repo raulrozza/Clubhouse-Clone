@@ -1,3 +1,4 @@
+import { constants } from '../util/constants.js';
 import Logger from '../util/logger.js';
 
 export default class LobbyController {
@@ -9,6 +10,14 @@ export default class LobbyController {
     onNewConnection(socket) {
         const { id } = socket;
         Logger.log(`[Lobby] New connection by ${id}`);
+        this._updateLobbyRooms({
+            socket,
+            activeRooms: [...this.activeRooms.values()],
+        });
+    }
+
+    _updateLobbyRooms({ socket, activeRooms }) {
+        socket.emit(constants.events.LOBBY_UPDATED, activeRooms);
     }
 
     getEvents() {

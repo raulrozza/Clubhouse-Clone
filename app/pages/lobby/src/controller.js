@@ -13,7 +13,7 @@ export default class LobbyController {
     }
 
     _setupSocket() {
-        return this.socketBuilder.setOnLobbyUpdated(this.newMethod());
+        return this.socketBuilder.setOnLobbyUpdated(this.newMethod()).build();
     }
 
     newMethod() {
