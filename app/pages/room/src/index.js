@@ -1,6 +1,7 @@
 import { constants } from '../../_shared/constants.js';
 import RoomController from './controller.js';
 import RoomSocketBuilder from './util/roomSocket.js';
+import View from './view.js';
 
 const room = {
     id: Date.now(),
@@ -22,4 +23,5 @@ const socketBuilder = new RoomSocketBuilder({
     namespace: constants.socketNamespaces.room,
 });
 
-(async () => await RoomController.initialize({ socketBuilder, roomInfo }))();
+(async () =>
+    await RoomController.initialize({ socketBuilder, roomInfo, view: View }))();

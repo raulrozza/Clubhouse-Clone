@@ -1,9 +1,10 @@
 import { constants } from '../../_shared/constants.js';
 
 export default class RoomController {
-    constructor({ socketBuilder, roomInfo }) {
+    constructor({ socketBuilder, roomInfo, view }) {
         this.socketBuilder = socketBuilder;
         this.roomInfo = roomInfo;
+        this.view = view;
     }
 
     static async initialize(deps) {
@@ -11,14 +12,34 @@ export default class RoomController {
     }
 
     async _initialize() {
-        const socket = this.socketBuilder
-            .setOnUserConnected(user => console.log('user connected!', user))
-            .setOnUserDisconnected(user =>
-                console.log('user disconnected', user),
-            )
-            .setOnRoomUpdated(room => console.log('room list', room))
-            .build();
+        this._setupViewEvents();
+        this.socket = this._setupSocket();
 
-        socket.emit(constants.events.JOIN_ROOM, this.roomInfo);
+        this.socket.emit(constants.events.JOIN_ROOM, this.roomInfo);
+    }
+
+    _setupViewEvents() {
+        this.view.updateUserImage(this.roomInfo.user);
+        this.view.updateRoomTopic(this.roomInfo.room);
+    }
+
+    _setupSocket() {
+        return this.socketBuilder
+            .setOnUserConnected(this.onUserConnected())
+            .setOnUserDisconnected(this.onUserDisconnected())
+            .setOnRoomUpdated(this.onRoomUpdated())
+            .build();
+    }
+
+    onRoomUpdated() {
+        return room => console.log('room list', room);
+    }
+
+    onUserDisconnected() {
+        return user => console.log('user disconnected', user);
+    }
+
+    onUserConnected() {
+        return user => console.log('user connected!', user);
     }
 }
