@@ -20,6 +20,17 @@ export default class View {
         users.forEach(item => View.addAttendeeOnGrid(item));
     }
 
+    static removeItemFromGrid(id) {
+        const existingItem = View._getExistingItemOnGrid({ id });
+        existingItem?.remove();
+    }
+
+    static _getExistingItemOnGrid({ id, baseElement = document }) {
+        const existingItem = baseElement.querySelector(`[id="${id}"]`);
+
+        return existingItem;
+    }
+
     static addAttendeeOnGrid(item) {
         const attendee = new Attendee(item);
         const htmlComponent = AttendeeComponent(attendee);

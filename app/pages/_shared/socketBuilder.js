@@ -1,4 +1,5 @@
 import { constants } from './constants.js';
+import Logger from './logger.js';
 
 export default class SocketBuilder {
     constructor({ socketUrl, namespace }) {
@@ -24,7 +25,7 @@ export default class SocketBuilder {
             withCredentials: false,
         });
 
-        socket.on('connection', () => console.log('connection'));
+        socket.on('connect', () => Logger.log('Connected to socket server!'));
 
         socket.on(constants.events.USER_CONNECTED, this.onUserConnected);
         socket.on(constants.events.USER_DISCONNECTED, this.onUserDisconnected);

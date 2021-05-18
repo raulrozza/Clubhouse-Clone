@@ -1,4 +1,5 @@
 import { constants } from '../../_shared/constants.js';
+import Logger from '../../_shared/logger.js';
 
 export default class RoomController {
     constructor({ socketBuilder, roomInfo, view }) {
@@ -36,16 +37,16 @@ export default class RoomController {
     }
 
     onUserDisconnected() {
-        return user => console.log('user disconnected', user);
+        return user => {
+            Logger.log(`User disconnected: ${user.username} {ID ${user.id}}`);
+
+            this.view.removeItemFromGrid(user.id);
+        };
     }
 
     onUserConnected() {
         return user => {
-            console.log(
-                `${new Date().toLocaleTimeString()} New connection: ${
-                    user.username
-                } {ID ${user.id}}`,
-            );
+            Logger.log(`New connection: ${user.username} {ID ${user.id}}`);
 
             this.view.addAttendeeOnGrid(user);
         };

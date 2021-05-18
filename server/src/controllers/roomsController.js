@@ -17,6 +17,7 @@ export default class RoomsController {
 
     disconnect(socket) {
         Logger.log(`Disconnection by ${socket.id}`);
+        this._logoutUser(socket);
     }
 
     _logoutUser(socket) {
@@ -39,7 +40,7 @@ export default class RoomsController {
         }
 
         const disconnectedUserWasAnOwner = userId === room.owner.id;
-        const onlyOneUserLeft = room.users.size() === 1;
+        const onlyOneUserLeft = room.users.size === 1;
 
         if (onlyOneUserLeft || disconnectedUserWasAnOwner) {
             room.owner = this._getNewRoomOwner({ room, socket });
