@@ -4,7 +4,7 @@ import RoomSocketBuilder from './util/roomSocket.js';
 import View from './view.js';
 
 const room = {
-    id: Date.now(),
+    id: '001',
     topic: 'JS Expert é noix',
 };
 

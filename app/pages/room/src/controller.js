@@ -40,6 +40,14 @@ export default class RoomController {
     }
 
     onUserConnected() {
-        return user => console.log('user connected!', user);
+        return user => {
+            console.log(
+                `${new Date().toLocaleTimeString()} New connection: ${
+                    user.username
+                } {ID ${user.id}}`,
+            );
+
+            this.view.addAttendeeOnGrid(user);
+        };
     }
 }
