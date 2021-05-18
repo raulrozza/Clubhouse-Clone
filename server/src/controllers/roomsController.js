@@ -26,12 +26,30 @@ export default class RoomsController {
             roomId,
         });
 
-        this._joinUserRoom(socket, {
+        const updatedRoom = this._joinUserRoom(socket, {
             user: updatedUserData,
             room,
         });
 
-        socket.emit(constants.events.USER_CONNECTED, updatedUserData);
+        this._notifyUsersOnRoom(socket, { roomId, user: updatedUserData });
+        this._replyWithActiveUsers(socket, updatedRoom.users);
+    }
+
+    _updateGlobalUserData({ userId, userData = {}, roomId = '' }) {
+        const user = this._users.get(userId) ?? {};
+        const existingRoom = this.rooms.has(roomId);
+
+        const updatedUserData = new Attendee({
+            ...user,
+            ...userData,
+            roomId,
+            // If its the only person in the room
+            isSpeaker: !existingRoom,
+        });
+
+        this._users.set(userId, updatedUserData);
+
+        return this._users.get(userId);
     }
 
     _joinUserRoom(socket, { user, room }) {
@@ -77,21 +95,14 @@ export default class RoomsController {
         return mappedRoom;
     }
 
-    _updateGlobalUserData({ userId, userData = {}, roomId = '' }) {
-        const user = this._users.get(userId) ?? {};
-        const existingRoom = this.rooms.has(roomId);
+    _notifyUsersOnRoom(socket, { roomId, user }) {
+        const event = constants.events.USER_CONNECTED;
+        socket.to(roomId).emit(event, user);
+    }
 
-        const updatedUserData = new Attendee({
-            ...user,
-            ...userData,
-            roomId,
-            // If its the only person in the room
-            isSpeaker: !existingRoom,
-        });
-
-        this._users.set(userId, updatedUserData);
-
-        return this._users.get(userId);
+    _replyWithActiveUsers(socket, users) {
+        const event = constants.events.LOBBY_UPDATED;
+        socket.emit(event, [...users.values()]);
     }
 
     getEvents() {
