@@ -58,9 +58,12 @@ export default class RoomController {
         return user => {
             Logger.log(`Promoting to owner: ${user.username} {ID ${user.id}}`);
 
+            this.roomService.upgradeUserPermission(user);
+
             if (!user.isSpeaker) return;
 
             this.view.addAttendeeOnGrid(user, true);
+            this.activateUserFeatures();
         };
     }
 
@@ -68,6 +71,7 @@ export default class RoomController {
         return attendees => {
             this.view.updateAttendeesOnGrid(attendees);
             this.roomService.updateCurrentUserProfile(attendees);
+            this.activateUserFeatures();
         };
     }
 
@@ -85,5 +89,10 @@ export default class RoomController {
 
             this.view.addAttendeeOnGrid(user);
         };
+    }
+
+    activateUserFeatures() {
+        const currentUser = this.roomService.getCurrentUser();
+        this.view.showUserFeatures(currentUser.isSpeaker);
     }
 }

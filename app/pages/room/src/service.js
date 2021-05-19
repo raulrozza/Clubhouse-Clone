@@ -12,6 +12,14 @@ export default class RoomService {
         return this.currentUser;
     }
 
+    upgradeUserPermission(user) {
+        if (!user.isSpeaker) return;
+
+        const isCurrentUser = user.id === this.currentUser.id;
+        if (!isCurrentUser) return;
+        this.currentUser = user;
+    }
+
     updateCurrentUserProfile(users) {
         this.currentUser = users.find(
             user => user.peerId === this.currentPeer.id,
