@@ -3,10 +3,11 @@ import RoomController from './controller.js';
 import RoomSocketBuilder from './util/roomSocket.js';
 import View from './view.js';
 
-const room = {
-    id: '001',
-    topic: 'JS Expert é noix',
-};
+const urlParams = new URLSearchParams(window.location.search);
+const keys = ['id', 'topic'];
+const urlData = keys.map(key => [key, urlParams.get(key)]);
+
+const room = Object.fromEntries(urlData);
 
 const user = {
     img: 'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/pilot_traveller_person_avatar-512.png',
