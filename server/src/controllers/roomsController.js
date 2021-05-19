@@ -8,7 +8,10 @@ export default class RoomsController {
     constructor({ roomsPubSub }) {
         this.roomsPubSub = roomsPubSub;
         this._users = new Map();
-        this.rooms = new CustomMap({ observer: this._roomObserver() });
+        this.rooms = new CustomMap({
+            observer: this._roomObserver(),
+            customMapper: this._mapRoom.bind(this),
+        });
     }
 
     _roomObserver() {
