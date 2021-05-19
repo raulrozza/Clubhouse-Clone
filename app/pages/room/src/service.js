@@ -31,4 +31,12 @@ export default class RoomService {
             user => user.peerId === this.currentPeer.id,
         );
     }
+
+    async getCurrentStream() {
+        const isSpeaker = this.currentUser.isSpeaker;
+
+        if (isSpeaker) return this.currentStream.stream;
+
+        return this.media.createMediaStreamFake();
+    }
 }
