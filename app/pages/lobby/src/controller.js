@@ -10,7 +10,13 @@ export default class LobbyController {
     }
 
     _init() {
+        this._setupViewEvents();
         this.socket = this._setupSocket();
+    }
+
+    _setupViewEvents() {
+        this.view.updateUserImage(this.user);
+        this.view.configureCreateRoomButton();
     }
 
     _setupSocket() {
