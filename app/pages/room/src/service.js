@@ -1,3 +1,5 @@
+import UserStream from './entities/userStream.js';
+
 export default class RoomService {
     constructor({ media }) {
         this.media = media;
@@ -7,7 +9,10 @@ export default class RoomService {
     }
 
     async init() {
-        this.currentStream = await this.media.getUserAudio();
+        this.currentStream = new UserStream({
+            stream: await this.media.getUserAudio(),
+            isFake: false,
+        });
     }
 
     setCurrentPeer(peer) {
@@ -38,5 +43,14 @@ export default class RoomService {
         if (isSpeaker) return this.currentStream.stream;
 
         return this.media.createMediaStreamFake();
+    }
+
+    async callNewUser(user) {
+        // Only call speaker users
+        const isSpeaker = this.currentUser.isSpeaker;
+        if (isSpeaker) return;
+
+        const stream = await this.getCurrentStream();
+        this.currentPeer.call(user.peerId, stream);
     }
 }

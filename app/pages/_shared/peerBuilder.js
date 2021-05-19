@@ -66,7 +66,10 @@ export default class PeerBuilder {
     }
 
     async build() {
-        const peer = new PeerCustomModule({ config: this.peerConfig });
+        const peer = new PeerCustomModule({
+            config: this.peerConfig,
+            onCall: this._prepareCallEvent.bind(this),
+        });
         peer.on('error', this.onError);
         peer.on('call', this._prepareCallEvent.bind(this));
 

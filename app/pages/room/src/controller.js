@@ -41,7 +41,30 @@ export default class RoomController {
         return this.peerBuilder
             .setOnError(this.onPeerError())
             .setOnConnectionOpened(this.onPeerConnectionOpened())
+            .setOnCallReceived(this.onCallReceived())
+            .setOnCallError(this.onCallError())
+            .setOnCallClose(this.onCallClose())
+            .setOnStreamReceived(this.onStreamReceived())
             .build();
+    }
+
+    onStreamReceived() {
+        return (call, stream) => console.log(call, stream);
+    }
+
+    onCallClose() {
+        return call => console.log(call);
+    }
+
+    onCallError() {
+        return (call, error) => {
+            console.log(call);
+            console.error(error);
+        };
+    }
+
+    onCallReceived() {
+        return call => console.log(call);
     }
 
     onPeerError() {
@@ -89,6 +112,8 @@ export default class RoomController {
             Logger.log(`New connection: ${user.username} {ID ${user.id}}`);
 
             this.view.addAttendeeOnGrid(user);
+
+            this.roomService.callNewUser(user);
         };
     }
 
