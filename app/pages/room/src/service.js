@@ -1,7 +1,13 @@
 export default class RoomService {
-    constructor() {
+    constructor({ media }) {
+        this.media = media;
         this.currentPeer = {};
         this.currentUser = {};
+        this.currentStream = {};
+    }
+
+    async init() {
+        this.currentStream = await this.media.getUserAudio();
     }
 
     setCurrentPeer(peer) {
