@@ -2,11 +2,14 @@ import { constants } from '../../_shared/constants.js';
 import Logger from '../../_shared/logger.js';
 
 export default class RoomController {
-    constructor({ socketBuilder, roomInfo, view, peerBuilder }) {
+    constructor({ socketBuilder, roomInfo, view, peerBuilder, roomService }) {
         this.socketBuilder = socketBuilder;
         this.roomInfo = roomInfo;
         this.view = view;
         this.peerBuilder = peerBuilder;
+        this.roomService = roomService;
+
+        this.socket = {};
     }
 
     static async initialize(deps) {
@@ -16,9 +19,7 @@ export default class RoomController {
     async _initialize() {
         this._setupViewEvents();
         this.socket = this._setupSocket();
-        this.peer = await this._setupWebRTC();
-
-        this.socket.emit(constants.events.JOIN_ROOM, this.roomInfo);
+        this.roomService.setCurrentPeer(await this._setupWebRTC());
     }
 
     _setupViewEvents() {
@@ -47,7 +48,10 @@ export default class RoomController {
     }
 
     onPeerConnectionOpened() {
-        return peer => console.log(peer);
+        return peer => {
+            this.roomInfo.user.peerId = peer.id;
+            this.socket.emit(constants.events.JOIN_ROOM, this.roomInfo);
+        };
     }
 
     onUserProfileUpgraded() {
@@ -61,7 +65,10 @@ export default class RoomController {
     }
 
     onRoomUpdated() {
-        return attendees => this.view.updateAttendeesOnGrid(attendees);
+        return attendees => {
+            this.view.updateAttendeesOnGrid(attendees);
+            this.roomService.updateCurrentUserProfile(attendees);
+        };
     }
 
     onUserDisconnected() {
