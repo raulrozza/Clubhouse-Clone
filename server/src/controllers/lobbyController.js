@@ -14,6 +14,14 @@ export default class LobbyController {
             socket,
             activeRooms: [...this.activeRooms.values()],
         });
+
+        this._activateEventProxy(socket);
+    }
+
+    _activateEventProxy(socket) {
+        this.roomsListener.on(constants.events.LOBBY_UPDATED, activeRooms => {
+            this._updateLobbyRooms({ socket, activeRooms });
+        });
     }
 
     _updateLobbyRooms({ socket, activeRooms }) {
