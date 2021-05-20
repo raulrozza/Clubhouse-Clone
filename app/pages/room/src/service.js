@@ -25,12 +25,42 @@ export default class RoomService {
         return this.currentUser;
     }
 
-    upgradeUserPermission(user) {
+    async upgradeUserPermission(user) {
         if (!user.isSpeaker) return;
 
         const isCurrentUser = user.id === this.currentUser.id;
         if (!isCurrentUser) return;
         this.currentUser = user;
+
+        return this._reconnectAsSpeaker();
+    }
+
+    async _reconnectAsSpeaker() {
+        return this.switchAudioStreamSource({ realAudio: true });
+    }
+
+    async switchAudioStreamSource({ realAudio }) {
+        const userAudio = realAudio
+            ? await this.media.getUserAudio()
+            : this.media.createMediaStreamFake();
+
+        this.currentStream = new UserStream({
+            stream: userAudio,
+            isFake: realAudio,
+        });
+
+        this.currentUser.isSpeaker = realAudio;
+
+        this._reconnectPeers(this.currentStream.stream);
+    }
+
+    _reconnectPeers(stream) {
+        for (const peer of this.peers.values()) {
+            const peerId = peer.call.peer;
+            peer.call.close();
+
+            this.currentPeer.call(peerId, stream);
+        }
     }
 
     updateCurrentUserProfile(users) {

@@ -25,6 +25,7 @@ export default class RoomController {
     }
 
     _setupViewEvents() {
+        this.view.configureLeaveButton();
         this.view.configureClapButton(this.onClapPressed());
         this.view.updateUserImage(this.roomInfo.user);
         this.view.updateRoomTopic(this.roomInfo.room);
@@ -126,9 +127,9 @@ export default class RoomController {
         return user => {
             Logger.log(`Promoting to owner: ${user.username} {ID ${user.id}}`);
 
-            this.roomService.upgradeUserPermission(user);
-
             if (!user.isSpeaker) return;
+
+            this.roomService.upgradeUserPermission(user);
 
             this.view.addAttendeeOnGrid(user, true);
             this.activateUserFeatures();

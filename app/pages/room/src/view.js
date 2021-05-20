@@ -1,5 +1,6 @@
 import Attendee from './entities/attendee.js';
 import AttendeeComponent from './components/attendeeTemplate.js';
+import { constants } from '../../_shared/constants.js';
 
 const imgUser = document.getElementById('imgUser');
 const pTopic = document.getElementById('pTopic');
@@ -9,6 +10,7 @@ const btnClipBoard = document.getElementById('btnClipBoard');
 const btnClap = document.getElementById('btnClap');
 const toggleImage = document.getElementById('toggleImage');
 const btnMicrophone = document.getElementById('btnMicrophone');
+const btnLeave = document.getElementById('btnLeave');
 
 export default class View {
     static updateUserImage({ img, username }) {
@@ -110,5 +112,13 @@ export default class View {
 
     static configureClapButton(command) {
         btnClap.addEventListener('click', View._onClapClick(command));
+    }
+
+    static _redirectToLobby() {
+        window.location = constants.pages.lobby;
+    }
+
+    static configureLeaveButton() {
+        btnLeave.addEventListener('click', () => View._redirectToLobby());
     }
 }
