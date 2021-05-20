@@ -49,7 +49,16 @@ export default class RoomController {
     }
 
     onStreamReceived() {
-        return (call, stream) => console.log(call, stream);
+        return (call, stream) => {
+            const callerId = call.peer;
+            const { isCurrentId } = this.roomService.addReceivedPeer(call);
+
+            this.view.renderAudioElement({
+                callerId,
+                stream,
+                isCurrentId,
+            });
+        };
     }
 
     onCallClose() {

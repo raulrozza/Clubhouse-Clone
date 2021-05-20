@@ -57,6 +57,27 @@ export default class View {
         baseElement.innerHTML += htmlComponent;
     }
 
+    static renderAudioElement({ callerId, stream, isCurrentId }) {
+        View._createAudioElement({
+            muted: isCurrentId,
+            srcObject: stream,
+        });
+    }
+
+    static _createAudioElement({ muted = true, srcObject }) {
+        const audio = document.createElement('audio');
+        audio.muted = muted;
+        audio.srcObject = srcObject;
+
+        audio.addEventListener('loadedmetadata', async () => {
+            try {
+                await audio.play();
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    }
+
     static showUserFeatures(isSpeaker) {
         if (!isSpeaker) {
             btnMicrophone.classList.add('hidden');

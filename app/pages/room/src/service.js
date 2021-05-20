@@ -6,6 +6,8 @@ export default class RoomService {
         this.currentPeer = {};
         this.currentUser = {};
         this.currentStream = {};
+
+        this.peers = new Map();
     }
 
     async init() {
@@ -45,9 +47,21 @@ export default class RoomService {
         return this.media.createMediaStreamFake();
     }
 
+    addReceivedPeer(call) {
+        const calledId = call.peer;
+        this.peers.set(calledId, { call });
+
+        const isCurrentId = calledId === this.currentUser.id;
+
+        console.log(calledId, this.currentUser, isCurrentId);
+
+        return { isCurrentId };
+    }
+
     async callNewUser(user) {
         // Only call  users if you are the speaker
         const isSpeaker = this.currentUser.isSpeaker;
+
         if (!isSpeaker) return;
 
         const stream = await this.getCurrentStream();
