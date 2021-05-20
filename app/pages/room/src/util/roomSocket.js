@@ -6,6 +6,8 @@ export default class RoomSocketBuilder extends SocketBuilder {
         super({ socketUrl, namespace });
         this.onRoomUpdated = () => {};
         this.onUserProfileUpgraded = () => {};
+        this.onSpeakRequest = () => {};
+        this.onSpeakAnswer = () => {};
     }
 
     setOnRoomUpdated(fn) {
@@ -20,6 +22,18 @@ export default class RoomSocketBuilder extends SocketBuilder {
         return this;
     }
 
+    setOnSpeakRequest(fn) {
+        this.onSpeakRequest = fn;
+
+        return this;
+    }
+
+    setOnSpeakAnswer(fn) {
+        this.onSpeakAnswer = fn;
+
+        return this;
+    }
+
     build() {
         const socket = super.build();
 
@@ -28,6 +42,8 @@ export default class RoomSocketBuilder extends SocketBuilder {
             constants.events.UPGRADE_USER_PERMISSION,
             this.onUserProfileUpgraded,
         );
+        socket.on(constants.events.SPEAK_REQUEST, this.onSpeakRequest);
+        socket.on(constants.events.SPEAK_ANSWER, this.onSpeakAnswer);
 
         return socket;
     }

@@ -21,7 +21,7 @@ export default class RoomsController {
     }
 
     speakAnswer(socket, { answer, user }) {
-        const currentUser = this.users.get(user.id);
+        const currentUser = this._users.get(user.id);
         const updatedUser = new Attendee({
             ...currentUser,
             isSpeaker: answer,

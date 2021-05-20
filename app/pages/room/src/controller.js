@@ -1,5 +1,6 @@
 import { constants } from '../../_shared/constants.js';
 import Logger from '../../_shared/logger.js';
+import Attendee from './entities/attendee.js';
 
 export default class RoomController {
     constructor({ socketBuilder, roomInfo, view, peerBuilder, roomService }) {
@@ -24,6 +25,7 @@ export default class RoomController {
     }
 
     _setupViewEvents() {
+        this.view.configureClapButton(this.onClapPressed());
         this.view.updateUserImage(this.roomInfo.user);
         this.view.updateRoomTopic(this.roomInfo.room);
     }
@@ -34,6 +36,8 @@ export default class RoomController {
             .setOnUserDisconnected(this.onUserDisconnected())
             .setOnRoomUpdated(this.onRoomUpdated())
             .setOnUserProfileUpgraded(this.onUserProfileUpgraded())
+            .setOnSpeakRequest(this.onSpeakRequest())
+            .setOnSpeakAnswer(this.onSpeakAnswer())
             .build();
     }
 
@@ -46,6 +50,15 @@ export default class RoomController {
             .setOnCallClose(this.onCallClose())
             .setOnStreamReceived(this.onStreamReceived())
             .build();
+    }
+
+    onClapPressed() {
+        return () => {
+            this.socket.emit(
+                constants.events.SPEAK_REQUEST,
+                this.roomInfo.user,
+            );
+        };
     }
 
     onStreamReceived() {
@@ -88,6 +101,24 @@ export default class RoomController {
         return peer => {
             this.roomInfo.user.peerId = peer.id;
             this.socket.emit(constants.events.JOIN_ROOM, this.roomInfo);
+        };
+    }
+
+    onSpeakAnswer() {
+        return socket => console.log(socket);
+    }
+
+    onSpeakRequest() {
+        return user => {
+            const attendee = new Attendee(user);
+            const answer = confirm(
+                `${attendee.username} pediu para falar! Aceitar?`,
+            );
+
+            this.socket.emit(constants.events.SPEAK_ANSWER, {
+                answer,
+                user: attendee,
+            });
         };
     }
 
