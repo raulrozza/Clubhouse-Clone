@@ -62,12 +62,12 @@ export default class RoomController {
     }
 
     onCallClose() {
-        return call => console.log(call);
+        return call => this.roomService.disconnectPeer({ peerId: call.peer });
     }
 
     onCallError() {
         return (call, error) => {
-            console.log(call);
+            this.roomService.disconnectPeer({ peerId: call.peer });
             console.error(error);
         };
     }
@@ -75,8 +75,6 @@ export default class RoomController {
     onCallReceived() {
         return async call => {
             const stream = await this.roomService.getCurrentStream();
-
-            console.log('answering call');
 
             call.answer(stream);
         };
@@ -119,6 +117,8 @@ export default class RoomController {
             Logger.log(`User disconnected: ${user.username} {ID ${user.id}}`);
 
             this.view.removeItemFromGrid(user.id);
+
+            this.roomService.disconnectPeer(user);
         };
     }
 

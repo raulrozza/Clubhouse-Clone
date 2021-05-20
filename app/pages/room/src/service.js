@@ -53,9 +53,14 @@ export default class RoomService {
 
         const isCurrentId = calledId === this.currentUser.id;
 
-        console.log(calledId, this.currentUser, isCurrentId);
-
         return { isCurrentId };
+    }
+
+    disconnectPeer({ peerId }) {
+        if (!this.peers.has(peerId)) return;
+
+        this.peers.get(peerId).call.close();
+        this.peers.delete(peerId);
     }
 
     async callNewUser(user) {
