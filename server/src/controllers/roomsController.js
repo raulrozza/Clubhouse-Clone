@@ -20,6 +20,37 @@ export default class RoomsController {
         };
     }
 
+    speakAnswer(socket, { answer, user }) {
+        const currentUser = this.users.get(user.id);
+        const updatedUser = new Attendee({
+            ...currentUser,
+            isSpeaker: answer,
+        });
+        this._users.set(user.id, updatedUser);
+
+        const roomId = user.roomId;
+        const room = this.rooms.get(roomId);
+        const userOnRoom = [...room.users.values()].find(
+            ({ id }) => user.id === id,
+        );
+        room.users.delete(userOnRoom);
+        room.users.add(updatedUser);
+        this.rooms.set(roomId, room);
+
+        // Notifying to realocate user on screen
+        socket.emit(constants.events.UPGRADE_USER_PERMISSION, updatedUser);
+        this._notifyUserProfileUpgrade({ socket, roomId, user: updatedUser });
+    }
+
+    speakRequest(socket) {
+        const userId = socket.id;
+        const user = this._users.get(userId);
+        const roomId = user.roomId;
+        const owner = this.rooms.get(roomId)?.owner;
+
+        socket.to(owner.id).emit(constants.events.SPEAK_REQUEST, user);
+    }
+
     notifyRoomSubscribers(rooms) {
         const event = constants.events.LOBBY_UPDATED;
         this.roomsPubSub.emit(event, [...rooms.values()]);
