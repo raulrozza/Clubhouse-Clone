@@ -46,9 +46,9 @@ export default class RoomService {
     }
 
     async callNewUser(user) {
-        // Only call speaker users
+        // Only call  users if you are the speaker
         const isSpeaker = this.currentUser.isSpeaker;
-        if (isSpeaker) return;
+        if (!isSpeaker) return;
 
         const stream = await this.getCurrentStream();
         this.currentPeer.call(user.peerId, stream);

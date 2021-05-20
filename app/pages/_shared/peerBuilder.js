@@ -58,6 +58,7 @@ export default class PeerBuilder {
     }
 
     _prepareCallEvent(call) {
+        console.log(call);
         call.on('stream', stream => this.onStreamReceived(call, stream));
         call.on('error', error => this.onCallError(call, error));
         call.on('close', () => this.onCallClose(call));

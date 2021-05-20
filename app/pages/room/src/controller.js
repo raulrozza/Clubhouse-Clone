@@ -64,7 +64,13 @@ export default class RoomController {
     }
 
     onCallReceived() {
-        return call => console.log(call);
+        return async call => {
+            const stream = await this.roomService.getCurrentStream();
+
+            console.log('answering call');
+
+            call.answer(stream);
+        };
     }
 
     onPeerError() {
