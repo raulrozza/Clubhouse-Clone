@@ -121,4 +121,29 @@ export default class View {
     static configureLeaveButton() {
         btnLeave.addEventListener('click', () => View._redirectToLobby());
     }
+
+    static _toggleMicrophoneIcon() {
+        const icon = btnMicrophone.firstElementChild;
+        const classes = [...icon.classList];
+
+        const inactiveMicClass = 'fa-microphone-slash';
+        const activeMicClass = 'fa-microphone';
+
+        const isInactiveMic = classes.includes(inactiveMicClass);
+        if (isInactiveMic) {
+            icon.classList.remove(inactiveMicClass);
+            icon.classList.add(activeMicClass);
+            return;
+        }
+
+        icon.classList.remove(activeMicClass);
+        icon.classList.add(inactiveMicClass);
+    }
+
+    static configureBtnMicrophone(command) {
+        btnMicrophone.addEventListener('click', () => {
+            View._toggleMicrophoneIcon();
+            command();
+        });
+    }
 }

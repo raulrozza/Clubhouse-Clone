@@ -27,6 +27,7 @@ export default class RoomController {
     _setupViewEvents() {
         this.view.configureLeaveButton();
         this.view.configureClapButton(this.onClapPressed());
+        this.view.configureBtnMicrophone(this.onMicrophonePressed());
         this.view.updateUserImage(this.roomInfo.user);
         this.view.updateRoomTopic(this.roomInfo.room);
     }
@@ -59,6 +60,12 @@ export default class RoomController {
                 constants.events.SPEAK_REQUEST,
                 this.roomInfo.user,
             );
+        };
+    }
+
+    onMicrophonePressed() {
+        return async () => {
+            await this.roomService.toggleAudioActivation();
         };
     }
 

@@ -6,6 +6,7 @@ export default class RoomService {
         this.currentPeer = {};
         this.currentUser = {};
         this.currentStream = {};
+        this.isAudioActive = true;
 
         this.peers = new Map();
     }
@@ -23,6 +24,11 @@ export default class RoomService {
 
     getCurrentUser() {
         return this.currentUser;
+    }
+
+    async toggleAudioActivation() {
+        this.isAudioActive = !this.isAudioActive;
+        this.switchAudioStreamSource({ realAudio: this.isAudioActive });
     }
 
     async upgradeUserPermission(user) {
