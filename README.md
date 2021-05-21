@@ -1,57 +1,27 @@
-# ClubHouse Clone Template - Semana JS Expert 4.0
+# ClubHouse Clone - Semana JS Expert 4.0
 
-Seja bem vindo(a) à quarta Semana Javascript Expert.Este é o código inicial para iniciar nossa jornada.
+Este projeto tem como foco e objetivo utilizar tecnologias de comunicação de áudio em tempo real para possibilitar aos usuários entrar e criar conversar sobre diversos tópicos.
 
-Marque esse projeto com uma estrela 🌟
+A aplicação foi desenvolvida durante a Semana JS Expert 4.0, ministrada pelo grandioso [Erick Wendel](https://github.com/erickwendel)
 
-## Preview
+## Conteúdo
 
-### Página de Login
+### **App**
 
-<img src="https://github.com/ErickWendel/semanajsexpert-clubhouse-template/raw/main/assets/printscreen/clubhouse-login.PNG" width="300" alt="Login" />
+A aplicação web/mobile, feita com design mobile first, usando apenas JS puro com a ferramenta de native modules.
 
-### Página de Salas
+No app, o usuário pode fazer login utilizando suas credenciais do **GitHub**, e então acessar o Lobby.
 
-<img src="https://github.com/ErickWendel/semanajsexpert-clubhouse-template/raw/main/assets/printscreen/clubhouse-home.PNG" width="300" alt="Home" />
+Dentro do Lobby, é possível criar salas de conversa, e visualizar as salas existentes.
 
-### Página de Sala
+Dentro de uma sala, o dono dela pode falar, enquanto os demais participantes podem apenas ouvir. Um participante pode requisitar ao dono da sala permissão para falar, e nesse momento ele se torna também um palestrante.
 
-<img src="https://github.com/ErickWendel/semanajsexpert-clubhouse-template/raw/main/assets/printscreen/clubhouse-room.PNG" width="300" alt="Room" />
+### **Servidor**
 
-## Checklist Features
+O back-end é um servidor de sockets que utiliza a biblioteca **Socket.IO**. Ele gerencia a conexão dos usuários e garante que as regras de negócio da aplicação estão sendo aplicadas.
 
-- [ ] O app deve funcionar na Web, Android e IOS
-- Login
-  - [ ] Deve ter login com GitHub
-    - [ ] Se houver dados do usuario em localStorage deve ir para lobby direto
+O servidor de sockets também gerencia as conexões peer to peer dos usuários, para que o cliente saiba para quem ligar na hora de efetuar as chamadas.
 
-- Lobby
-  - [ ] Se não houver dados do usuario em localStorage deve voltar para login
-  - [ ] Mostra todas as salas ativas
-  - [ ] Atualiza salas em realtime
-  - [ ] Pode criar uma sala sem topico
-  - [ ] Pode criar uma sala com topico
-  - [ ] Pode acessar salas ativas
-- Room
-  - [ ] Se não houver dados do usuario em localStorage deve voltar para login
-  - [ ] Cria uma sala com um usuário dono
-  - [ ] Todos usuários futuros entram com perfil de attendees
-  - [ ] Notifica Lobby sobre atualizações na sala
-  - [ ] Lista usuarios com perfis de speakers e attendees
-  - [ ] Se o dono da sala desconectar, será removida
-  - Users
-    - Speaker
-      - [ ] Recebe notificação de attendees para se tornarem speakers
-      - [ ] Atualizam a tela o upgrade de attendee para speaker
-      - [ ] Poderá deixar seu microfone mudo
-      - Se dono da sala
-        - [ ] Pode aprovar attendees a virarem speakers
-        - Ao se desconectar
-          - [ ] Promove o speaker mais velho da sala
-          - [ ] Se não houver speaker promove o attendee mais velho da sala
-    - Attendee
-      - [ ] Pode ouvir speakers ativos
-      - [ ] Pode pedir upgrade de perfil ao dono da sala
-        - Ao ser aprovado
-          - [ ] Reinicia todas as suas chamas ativas com os usuarios da sala
-          - [ ] Recebe as permissões do perfil speaker
+## Considerações
+
+A aplicação é feita com Javascript puro, para não se perder o costume de utilizar a linguagem em sua forma mais natural (vulgo sem Typescript). São utilizados alguns conceitos limpos como separação de responsabilidades, inversão de dependências, e padrões como builder e MVC.
