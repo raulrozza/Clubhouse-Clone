@@ -1,6 +1,7 @@
 import { constants } from '../../_shared/constants.js';
 import Media from '../../_shared/media.js';
 import PeerBuilder from '../../_shared/peerBuilder.js';
+import UserDB from '../../_shared/userDb.js';
 import RoomController from './controller.js';
 import RoomService from './service.js';
 import RoomSocketBuilder from './util/roomSocket.js';
@@ -12,10 +13,7 @@ const urlData = keys.map(key => [key, urlParams.get(key)]);
 
 const room = Object.fromEntries(urlData);
 
-const user = {
-    img: 'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/pilot_traveller_person_avatar-512.png',
-    username: 'Raul Rosá',
-};
+const user = UserDB.get();
 
 const roomInfo = {
     user,

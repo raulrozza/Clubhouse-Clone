@@ -1,12 +1,10 @@
 import { constants } from '../../_shared/constants.js';
+import UserDB from '../../_shared/userDb.js';
 import LobbyController from './controller.js';
 import LobbySocketBuilder from './util/lobbySocket.js';
 import View from './view.js';
 
-const user = {
-    img: 'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/pilot_traveller_person_avatar-512.png',
-    username: 'Raul Rosá',
-};
+const user = UserDB.get();
 
 const socketBuilder = new LobbySocketBuilder({
     socketUrl: constants.socketUrl,
