@@ -27,6 +27,9 @@ function onLogin({ provider, firebase }) {
     };
 }
 
+const currentUser = UserDB.get();
+if (Object.keys(currentUser).length) redirectToLobby();
+
 // Initialize Firebase
 firebase.initializeApp(constants.firebaseConfig);
 firebase.analytics();

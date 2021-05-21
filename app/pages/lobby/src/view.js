@@ -1,3 +1,4 @@
+import { constants } from '../../_shared/constants.js';
 import RoomComponent from './components/roomTemplate.js';
 import Room from './entities/room.js';
 
@@ -55,5 +56,9 @@ export default class View {
     static updateUserImage({ img, username }) {
         imgUser.src = img;
         imgUser.alt = username;
+    }
+
+    static redirectToLogin() {
+        window.location = constants.pages.login;
     }
 }

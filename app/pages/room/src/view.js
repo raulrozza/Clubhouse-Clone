@@ -146,4 +146,8 @@ export default class View {
             command();
         });
     }
+
+    static redirectToLogin() {
+        window.location = constants.pages.login;
+    }
 }

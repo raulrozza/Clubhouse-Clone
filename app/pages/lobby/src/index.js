@@ -5,6 +5,7 @@ import LobbySocketBuilder from './util/lobbySocket.js';
 import View from './view.js';
 
 const user = UserDB.get();
+if (!Object.keys(user).length) View.redirectToLogin();
 
 const socketBuilder = new LobbySocketBuilder({
     socketUrl: constants.socketUrl,

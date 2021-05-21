@@ -14,6 +14,7 @@ const urlData = keys.map(key => [key, urlParams.get(key)]);
 const room = Object.fromEntries(urlData);
 
 const user = UserDB.get();
+if (!Object.keys(user).length) View.redirectToLogin();
 
 const roomInfo = {
     user,
